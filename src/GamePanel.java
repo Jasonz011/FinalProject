@@ -14,6 +14,7 @@ public class GamePanel extends JPanel implements KeyListener, MouseListener, Act
     private boolean[] pressedKeys;
 
     private ArrayList<String> words;
+    private String currentWord;
 
     private Timer timer;
     private int time;
@@ -25,6 +26,7 @@ public class GamePanel extends JPanel implements KeyListener, MouseListener, Act
         } catch (IOException e) {
             System.out.println(e.getMessage());
         }
+        currentWord = "";
         time = 60;
         timer = new Timer(1000, this); // this Timer will call the actionPerformed interface method every 1000ms = 1 second
         timer.start();
@@ -70,13 +72,20 @@ public class GamePanel extends JPanel implements KeyListener, MouseListener, Act
     public void mouseClicked(MouseEvent e) { }
     // this method isn't called, so mouseReleased is best
 
-    public void mousePressed(MouseEvent e) { } // unimplemented
+    public void mousePressed(MouseEvent e) {
+        if (e.getButton() == MouseEvent.BUTTON1) {  // left mouse click
+            Point mouseClickLocation = e.getPoint();
+            // if statement about the rectangle of the word touching the mouse cursor
+            // add the letter of the rectangle its touching to currentWord
+        }
+    }
 
     public void mouseReleased(MouseEvent e) {
         if (e.getButton() == MouseEvent.BUTTON1) {  // left mouse click
-
-        } else {
-            Point mouseClickLocation = e.getPoint();
+            if (words.contains(currentWord)) {
+                //add math logic
+            }
+            currentWord = "";
         }
     }
 
