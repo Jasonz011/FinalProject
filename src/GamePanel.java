@@ -11,7 +11,7 @@ import java.util.Scanner;
 public class GamePanel extends JPanel implements KeyListener, MouseListener, ActionListener {
     private BufferedImage background;
 
-    private boolean[] pressedKeys;
+    private String[][] gameBoard;
 
     private ArrayList<String> words;
     private String currentWord;
@@ -21,6 +21,7 @@ public class GamePanel extends JPanel implements KeyListener, MouseListener, Act
 
     public GamePanel(String name) {
         readData();
+        fillBoard();
         try {
             background = ImageIO.read(new File(""));
         } catch (IOException e) {
@@ -30,6 +31,7 @@ public class GamePanel extends JPanel implements KeyListener, MouseListener, Act
         time = 60;
         timer = new Timer(1000, this); // this Timer will call the actionPerformed interface method every 1000ms = 1 second
         timer.start();
+
         addKeyListener(this);
         addMouseListener(this);
         setFocusable(true); // this line of code + one below makes this panel active for keylistener events
@@ -47,6 +49,12 @@ public class GamePanel extends JPanel implements KeyListener, MouseListener, Act
         } catch (IOException exception) {
             System.out.println(exception.getMessage());
         }
+    }
+
+    public void fillBoard() {
+        GameLogic g = new GameLogic();
+        gameBoard = g.getLetters();
+        g.printLetters();
     }
 
     @Override
