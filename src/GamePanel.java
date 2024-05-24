@@ -64,6 +64,7 @@ public class GamePanel extends JPanel implements KeyListener, MouseListener, Act
     @Override
     public void paintComponent(Graphics g) {
         super.paintComponent(g);  // just do this
+        continueButton.setLocation(400);
         g.drawImage(background, 0, 0, null);
         g.setFont(new Font("Courier New", Font.BOLD, 24));
         if (time > 0) {
