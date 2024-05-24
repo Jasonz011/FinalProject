@@ -10,14 +10,14 @@ import java.util.Scanner;
 
 public class GamePanel extends JPanel implements KeyListener, MouseListener, ActionListener {
     private BufferedImage background;
-
     private String[][] gameBoard;
-
     private ArrayList<String> words;
     private String currentWord;
-
     private Timer timer;
     private int time;
+    private int points;
+    private JButton continueButton;
+    private JFrame enclosingFrame;
 
     public GamePanel(String name) {
         readData();
@@ -27,11 +27,14 @@ public class GamePanel extends JPanel implements KeyListener, MouseListener, Act
         } catch (IOException e) {
             System.out.println(e.getMessage());
         }
+        enclosingFrame = new JFrame(name);
+        continueButton = new JButton("continue");
+        continueButton.addActionListener(this);
         currentWord = "";
-        time = 60;
+        time = 5;
+        points = 0;
         timer = new Timer(1000, this); // this Timer will call the actionPerformed interface method every 1000ms = 1 second
         timer.start();
-
         addKeyListener(this);
         addMouseListener(this);
         setFocusable(true); // this line of code + one below makes this panel active for keylistener events
@@ -53,6 +56,7 @@ public class GamePanel extends JPanel implements KeyListener, MouseListener, Act
 
     public void fillBoard() {
         GameLogic g = new GameLogic();
+        g.fillArray();
         gameBoard = g.getLetters();
         g.printLetters();
     }
@@ -62,7 +66,11 @@ public class GamePanel extends JPanel implements KeyListener, MouseListener, Act
         super.paintComponent(g);  // just do this
         g.drawImage(background, 0, 0, null);
         g.setFont(new Font("Courier New", Font.BOLD, 24));
-        g.drawString("Time: " + time, 20, 70);
+        if (time > 0) {
+            g.drawString("Time: " + time, 20, 70);
+        } else {
+            g.drawString("Time's Up!", 280, 40);
+        }
     }
 
     // ----- KeyListener interface methods -----
@@ -91,7 +99,16 @@ public class GamePanel extends JPanel implements KeyListener, MouseListener, Act
     public void mouseReleased(MouseEvent e) {
         if (e.getButton() == MouseEvent.BUTTON1) {  // left mouse click
             if (words.contains(currentWord)) {
-                //add math logic
+                int length = currentWord.length();
+                if (length == 3) {
+                    points += 100;
+                } else if (length == 4) {
+                    points += 400;
+                } else if (length == 5) {
+                    points += 800;
+                } else if (length >= 6) {
+                    points += 1000 + (length-5) * 400;
+                }
             }
             currentWord = "";
         }
@@ -105,6 +122,12 @@ public class GamePanel extends JPanel implements KeyListener, MouseListener, Act
     public void actionPerformed(ActionEvent e) {
         if (e.getSource() instanceof Timer) {
             time--;
+        } else if (e.getSource() instanceof JButton) {
+            JButton button = (JButton) e.getSource();
+            if (button == continueButton) {
+                EndFrame end = new EndFrame("Scoreboard");
+                enclosingFrame.setVisible(false);
+            }
         }
     }
 }
