@@ -16,11 +16,11 @@ public class GameLogic {
                 int rand = (int) (Math.random() * 100 + 1);
                 // for some reason this doesn't work as intended, instead the whole array is filled with null elements
                 if (rand <= 32) {
-                    letters[r][c] = vowels[(int) (Math.random() * 5)];
+                    letters[r][c] = vowels[(int) (Math.random() * 5)].toUpperCase();
                 } else if (rand <= 36) {
-                    letters[r][c] = rareLetters[(int) (Math.random() * 4)];
+                    letters[r][c] = rareLetters[(int) (Math.random() * 4)].toUpperCase();
                 } else {
-                    letters[r][c] = consonants[(int) (Math.random() * 17)];
+                    letters[r][c] = consonants[(int) (Math.random() * 17)].toUpperCase();
                 }
             }
         }
