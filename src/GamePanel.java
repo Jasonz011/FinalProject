@@ -15,7 +15,7 @@ public class GamePanel extends JPanel implements KeyListener, MouseListener, Act
     private String[][] letterBoard;
     private WordBox[][] gameBoard;
     private ArrayList<String> words;
-    private String currentWord;
+    private ArrayList<String> currentWord;
     private Timer timer;
     private int time;
     private int points;
@@ -48,7 +48,7 @@ public class GamePanel extends JPanel implements KeyListener, MouseListener, Act
         enclosingFrame = new JFrame(name);
         continueButton = new JButton("continue");
         continueButton.addActionListener(this);
-        currentWord = "";
+        currentWord = new ArrayList<>();
         time = 5;
         points = 0;
         timer = new Timer(1000, this); // this Timer will call the actionPerformed interface method every 1000ms = 1 second
@@ -124,16 +124,25 @@ public class GamePanel extends JPanel implements KeyListener, MouseListener, Act
 
     public void mousePressed(MouseEvent e) {
         if (e.getButton() == MouseEvent.BUTTON1) {  // left mouse click
-            Point mouseClickLocation = e.getPoint();
-            // if statement about the rectangle of the word touching the mouse cursor
-            // add the letter of the rectangle its touching to currentWord
+            Rectangle mouseClickLocation = new Rectangle((int) e.getPoint().getX(), (int) e.getPoint().getY(), 1, 1);
+            for (int r = 0; r < gameBoard.length; r++) {
+                for (int c = 0; c < gameBoard[0].length; c++) {
+                    if (mouseClickLocation.intersects(gameBoard[r][c].getThisRect())) {
+                        currentWord.add(letterBoard[r][c]);
+                    }
+                }
+            }
         }
     }
 
     public void mouseReleased(MouseEvent e) {
+        String thisWord = "";
+        for (int i = 0; i<currentWord.size(); i++) {
+            thisWord += currentWord.get(i);
+        }
         if (e.getButton() == MouseEvent.BUTTON1) {  // left mouse click
-            if (words.contains(currentWord)) {
-                int length = currentWord.length();
+            if (words.contains(thisWord)) {
+                int length = currentWord.size();
                 if (length == 3) {
                     points += 100;
                 } else if (length == 4) {
@@ -144,7 +153,7 @@ public class GamePanel extends JPanel implements KeyListener, MouseListener, Act
                     points += 1000 + (length-5) * 400;
                 }
             }
-            currentWord = "";
+            currentWord = new ArrayList<>();
         }
     }
 

@@ -2,6 +2,7 @@ import javax.imageio.ImageIO;
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
+import java.awt.Rectangle;
 
 public class WordBox {
     private String letter;
@@ -13,6 +14,7 @@ public class WordBox {
     private BufferedImage woodRect;
     private BufferedImage woodRectSelected;
     private BufferedImage currentImg;
+    private Rectangle thisRect;
 
     public WordBox(String letter, int boxX, int boxY, int textX, int textY) {
         this.letter = letter;
@@ -20,6 +22,7 @@ public class WordBox {
         this.boxY = boxY;
         this.textX = textX;
         this.textY = textY;
+        thisRect = new Rectangle(boxX, boxY, 80, 76);
         try {
             woodRect = ImageIO.read(new File("src\\woodRect.png"));
             woodRectSelected = ImageIO.read(new File("src\\woodRectSelected.png"));
@@ -43,6 +46,16 @@ public class WordBox {
 
     public int getTextY() {
         return textY;
+    }
+    public void switchRect() {
+        if (currentImg.equals(woodRect)) {
+            currentImg = woodRectSelected;
+        } else {
+            currentImg = woodRect;
+        }
+    }
+    public Rectangle getThisRect() {
+        return thisRect;
     }
 
     public String getLetter() {
