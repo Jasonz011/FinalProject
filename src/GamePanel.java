@@ -8,7 +8,7 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Scanner;
 
-public class GamePanel extends JPanel implements KeyListener, MouseListener, ActionListener {
+public class GamePanel extends JPanel implements KeyListener, MouseListener, ActionListener, MouseMotionListener {
     private BufferedImage background;
     private BufferedImage woodRect;
     private BufferedImage woodRectSelected;
@@ -55,6 +55,7 @@ public class GamePanel extends JPanel implements KeyListener, MouseListener, Act
         timer.start();
         addKeyListener(this);
         addMouseListener(this);
+        addMouseMotionListener(this);
         setFocusable(true); // this line of code + one below makes this panel active for keylistener events
         requestFocusInWindow(); // see comment above
     }
@@ -119,23 +120,15 @@ public class GamePanel extends JPanel implements KeyListener, MouseListener, Act
     }
 
     // ----- MouseListener interface methods -----
-    public void mouseClicked(MouseEvent e) { }
+    public void mouseClicked(MouseEvent e) // pressed and released
+    { }
     // this method isn't called, so mouseReleased is best
 
-    public void mousePressed(MouseEvent e) {
-        if (e.getButton() == MouseEvent.BUTTON1) {  // left mouse click
-            Rectangle mouseClickLocation = new Rectangle((int) e.getPoint().getX(), (int) e.getPoint().getY(), 1, 1);
-            for (int r = 0; r < gameBoard.length; r++) {
-                for (int c = 0; c < gameBoard[0].length; c++) {
-                    if (mouseClickLocation.intersects(gameBoard[r][c].getThisRect())) {
-                        currentWord.add(letterBoard[r][c]);
-                    }
-                }
-            }
-        }
+    public void mousePressed(MouseEvent e) { // pressed
+
     }
 
-    public void mouseReleased(MouseEvent e) {
+    public void mouseReleased(MouseEvent e) { // released
         String thisWord = "";
         for (int i = 0; i<currentWord.size(); i++) {
             thisWord += currentWord.get(i);
@@ -172,5 +165,25 @@ public class GamePanel extends JPanel implements KeyListener, MouseListener, Act
                 enclosingFrame.setVisible(false);
             }
         }
+    }
+
+    @Override
+    public void mouseDragged(MouseEvent e) {
+        if (e.getButton() == MouseEvent.BUTTON1) {  // left mouse click
+            Rectangle mouseClickLocation = new Rectangle((int) e.getPoint().getX(), (int) e.getPoint().getY(), 1, 1);
+            for (int r = 0; r < gameBoard.length; r++) {
+                for (int c = 0; c < gameBoard[0].length; c++) {
+                    if (mouseClickLocation.intersects(gameBoard[r][c].getThisRect())) {
+                        currentWord.add(letterBoard[r][c]);
+                        gameBoard[r][c].switchRect();
+                    }
+                }
+            }
+        }
+    }
+
+    @Override
+    public void mouseMoved(MouseEvent e) {
+
     }
 }
