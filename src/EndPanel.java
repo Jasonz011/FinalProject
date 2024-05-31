@@ -11,12 +11,13 @@ import java.util.Scanner;
 public class EndPanel extends JPanel {
     private BufferedImage background;
     private int points;
-    public EndPanel(JFrame frame) {
+    public EndPanel(JFrame frame, int points) {
         try {
             background = ImageIO.read(new File("")); //fill in
         } catch (IOException e) {
             System.out.println(e.getMessage());
         }
+        this.points = points;
     }
 
     @Override

@@ -3,14 +3,14 @@ import javax.swing.*;
 public class EndFrame {
     private EndPanel endPanel;
 
-    public EndFrame(String name) {
+    public EndFrame(String name, int points) {
         JFrame frame = new JFrame("Scoreboard");
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         frame.setSize(500, 560);
         frame.setLocationRelativeTo(null); // auto-centers frame in screen
 
         // create and add panel
-        endPanel = new EndPanel(frame);
+        endPanel = new EndPanel(frame, points);
         frame.add(endPanel);
 
         // display the frame

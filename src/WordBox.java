@@ -6,7 +6,6 @@ import java.awt.Rectangle;
 
 public class WordBox {
     private String letter;
-
     private int boxX;
     private int boxY;
     private int textX;

@@ -16,7 +16,7 @@ public class GamePanel extends JPanel implements KeyListener, MouseListener, Act
     private String[][] letterBoard;
     private WordBox[][] gameBoard;
     private ArrayList<String> words;
-    private ArrayList<String> currentWord;
+    private String currentWord;
     private Timer timer;
     private int time;
     private int points;
@@ -26,7 +26,6 @@ public class GamePanel extends JPanel implements KeyListener, MouseListener, Act
     private Point mouseDragLoc;
     private int endX;
     private int endY;
-    private Rectangle prev;
 
 
     public GamePanel(String name) {
@@ -56,8 +55,9 @@ public class GamePanel extends JPanel implements KeyListener, MouseListener, Act
         mouseDragLoc = new Point();
         enclosingFrame = new JFrame(name);
         continueButton = new JButton("continue");
+        add(continueButton);
         continueButton.addActionListener(this);
-        currentWord = new ArrayList<>();
+        currentWord = "";
         time = 5;
         points = 0;
         timer = new Timer(1000, this); // this Timer will call the actionPerformed interface method every 1000ms = 1 second
@@ -156,24 +156,24 @@ public class GamePanel extends JPanel implements KeyListener, MouseListener, Act
 
 
     public void mouseReleased(MouseEvent e) { // released
-        String thisWord = "";
-        for (int i = 0; i<currentWord.size(); i++) {
-            thisWord += currentWord.get(i);
-        }
         if (e.getButton() == MouseEvent.BUTTON1) {  // left mouse click
-            if (words.contains(thisWord)) {
-                int length = currentWord.size();
+            if (words.contains(currentWord)) {
+                int length = currentWord.length();
                 if (length == 3) {
                     points += 100;
+                    System.out.println("blah");
                 } else if (length == 4) {
                     points += 400;
+                    System.out.println("blah");
                 } else if (length == 5) {
                     points += 800;
+                    System.out.println("blah");
                 } else if (length >= 6) {
                     points += 1000 + (length-5) * 400;
+                    System.out.println("blah");
                 }
             }
-            currentWord = new ArrayList<>();
+            currentWord = "";
         }
         for (int r = 0; r < gameBoard.length; r++) {
             for (int c = 0; c < gameBoard[0].length; c++) {
@@ -196,7 +196,7 @@ public class GamePanel extends JPanel implements KeyListener, MouseListener, Act
         } else if (e.getSource() instanceof JButton) {
             JButton button = (JButton) e.getSource();
             if (button == continueButton) {
-                EndFrame end = new EndFrame("Scoreboard");
+                EndFrame end = new EndFrame("Scoreboard", points);
                 enclosingFrame.setVisible(false);
             }
         }
@@ -205,7 +205,6 @@ public class GamePanel extends JPanel implements KeyListener, MouseListener, Act
 
     @Override
     public void mouseDragged(MouseEvent e) {
-        System.out.println("blah");
         mouseDragLoc = e.getPoint();
         endX = mouseDragLoc.x;
         endY = mouseDragLoc.y;
@@ -213,15 +212,13 @@ public class GamePanel extends JPanel implements KeyListener, MouseListener, Act
         for (int r = 0; r < gameBoard.length; r++) {
             for (int c = 0; c < gameBoard[0].length; c++) {
                 if (mouseClickLocation.intersects(gameBoard[r][c].getThisRect())) {
-                    if (!prev.equals(gameBoard[r][c].getThisRect())) {
-                        endX = gameBoard[r][c].getBoxX() + 40;
-                        endY = gameBoard[r][c].getBoxX() + 38;
-                    }
-                    currentWord.add(letterBoard[r][c]);
+                    endX = gameBoard[r][c].getBoxX() + 40;
+                    endY = gameBoard[r][c].getBoxX() + 38;
                     if (!gameBoard[r][c].isSelected()) {
+                        currentWord += gameBoard[r][c].getLetter();
+                        System.out.println("added to word");
                         gameBoard[r][c].switchToSelected();
                     }
-                    prev = gameBoard[r][c].getThisRect();
                 }
             }
         }
@@ -229,10 +226,7 @@ public class GamePanel extends JPanel implements KeyListener, MouseListener, Act
 
 
     @Override
-    public void mouseMoved(MouseEvent e) {
-
-
-    }
+    public void mouseMoved(MouseEvent e) {}
 }
 
 
