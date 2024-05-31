@@ -15,6 +15,7 @@ public class WordBox {
     private BufferedImage woodRectSelected;
     private BufferedImage currentImg;
     private Rectangle thisRect;
+    private boolean selected;
 
     public WordBox(String letter, int boxX, int boxY, int textX, int textY) {
         this.letter = letter;
@@ -22,6 +23,7 @@ public class WordBox {
         this.boxY = boxY;
         this.textX = textX;
         this.textY = textY;
+        selected = false;
         thisRect = new Rectangle(boxX, boxY, 80, 76);
         try {
             woodRect = ImageIO.read(new File("src\\woodRect.png"));
@@ -64,5 +66,17 @@ public class WordBox {
 
     public BufferedImage getCurrentImg() {
         return currentImg;
+    }
+
+    public boolean isSelected() {
+        return selected;
+    }
+
+    public void switchToSelected() {
+        currentImg = woodRectSelected;
+    }
+
+    public void switchToNormal() {
+        currentImg = woodRect;
     }
 }

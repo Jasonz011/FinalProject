@@ -10,8 +10,13 @@ import java.util.Scanner;
 
 public class EndPanel extends JPanel {
     private BufferedImage background;
-    public EndPanel(JFrame name) {
-
+    private int points;
+    public EndPanel(JFrame frame) {
+        try {
+            background = ImageIO.read(new File("")); //fill in
+        } catch (IOException e) {
+            System.out.println(e.getMessage());
+        }
     }
 
     @Override
@@ -19,5 +24,6 @@ public class EndPanel extends JPanel {
         super.paintComponent(g);  // just do this
         g.drawImage(background, 0, 0, null);
         g.setFont(new Font("Courier New", Font.BOLD, 24));
+        g.drawString("Points Earned: " + points, 200, 75);
     }
 }

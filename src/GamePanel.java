@@ -8,6 +8,7 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Scanner;
 
+
 public class GamePanel extends JPanel implements KeyListener, MouseListener, ActionListener, MouseMotionListener {
     private BufferedImage background;
     private BufferedImage woodRect;
@@ -21,6 +22,12 @@ public class GamePanel extends JPanel implements KeyListener, MouseListener, Act
     private int points;
     private JButton continueButton;
     private JFrame enclosingFrame;
+    private Point currentMouseLoc;
+    private Point mouseDragLoc;
+    private int endX;
+    private int endY;
+    private Rectangle prev;
+
 
     public GamePanel(String name) {
         readData();
@@ -45,6 +52,8 @@ public class GamePanel extends JPanel implements KeyListener, MouseListener, Act
             boxY += 112;
             textY += 112;
         }
+        currentMouseLoc = new Point();
+        mouseDragLoc = new Point();
         enclosingFrame = new JFrame(name);
         continueButton = new JButton("continue");
         continueButton.addActionListener(this);
@@ -73,11 +82,13 @@ public class GamePanel extends JPanel implements KeyListener, MouseListener, Act
         }
     }
 
+
     public void fillBoard() {
         GameLogic g = new GameLogic();
         g.fillArray();
         letterBoard = g.getLetters();
     }
+
 
     @Override
     public void paintComponent(Graphics g) {
@@ -99,34 +110,50 @@ public class GamePanel extends JPanel implements KeyListener, MouseListener, Act
         }
 
 
-
         g.setFont(new Font("Courier New", Font.BOLD, 24));
         if (time > 0) {
             g.drawString("Time: " + time, 20, 70);
         } else {
             g.drawString("Time's Up!", 280, 40);
         }
+        Graphics2D g2 = (Graphics2D) g;
+        g2.setStroke(new BasicStroke(10));
+        g2.drawLine(currentMouseLoc.x, currentMouseLoc.y, mouseDragLoc.x, mouseDragLoc.y);
     }
+
 
     // ----- KeyListener interface methods -----
     public void keyTyped(KeyEvent e) { } // unimplemented
+
 
     public void keyPressed(KeyEvent e) {
         int key = e.getKeyCode();
     }
 
+
     public void keyReleased(KeyEvent e) {
         int key = e.getKeyCode();
     }
+
 
     // ----- MouseListener interface methods -----
     public void mouseClicked(MouseEvent e) // pressed and released
     { }
     // this method isn't called, so mouseReleased is best
 
-    public void mousePressed(MouseEvent e) { // pressed
 
+    public void mousePressed(MouseEvent e) { // pressed
+        Rectangle mouseClickLocation = new Rectangle((int) e.getPoint().getX(), (int) e.getPoint().getY(), 1, 1);
+        for (int r = 0; r < gameBoard.length; r++) {
+            for (int c = 0; c < gameBoard[0].length; c++) {
+                if (mouseClickLocation.intersects(gameBoard[r][c].getThisRect())) {
+                    currentMouseLoc.setLocation(gameBoard[r][c].getBoxX() + 40, gameBoard[r][c].getBoxY() + 38);
+                    Rectangle prev = gameBoard[r][c].getThisRect();
+                }
+            }
+        }
     }
+
 
     public void mouseReleased(MouseEvent e) { // released
         String thisWord = "";
@@ -148,11 +175,19 @@ public class GamePanel extends JPanel implements KeyListener, MouseListener, Act
             }
             currentWord = new ArrayList<>();
         }
+        for (int r = 0; r < gameBoard.length; r++) {
+            for (int c = 0; c < gameBoard[0].length; c++) {
+                gameBoard[r][c].switchToNormal();
+            }
+        }
     }
+
 
     public void mouseEntered(MouseEvent e) { } // unimplemented
 
+
     public void mouseExited(MouseEvent e) { } // unimplemented
+
 
     // ACTIONLISTENER INTERFACE METHODS: used for buttons AND timers!
     public void actionPerformed(ActionEvent e) {
@@ -167,23 +202,39 @@ public class GamePanel extends JPanel implements KeyListener, MouseListener, Act
         }
     }
 
+
     @Override
     public void mouseDragged(MouseEvent e) {
-        if (e.getButton() == MouseEvent.BUTTON1) {  // left mouse click
-            Rectangle mouseClickLocation = new Rectangle((int) e.getPoint().getX(), (int) e.getPoint().getY(), 1, 1);
-            for (int r = 0; r < gameBoard.length; r++) {
-                for (int c = 0; c < gameBoard[0].length; c++) {
-                    if (mouseClickLocation.intersects(gameBoard[r][c].getThisRect())) {
-                        currentWord.add(letterBoard[r][c]);
-                        gameBoard[r][c].switchRect();
+        System.out.println("blah");
+        mouseDragLoc = e.getPoint();
+        endX = mouseDragLoc.x;
+        endY = mouseDragLoc.y;
+        Rectangle mouseClickLocation = new Rectangle((int) e.getPoint().getX(), (int) e.getPoint().getY(), 1, 1);
+        for (int r = 0; r < gameBoard.length; r++) {
+            for (int c = 0; c < gameBoard[0].length; c++) {
+                if (mouseClickLocation.intersects(gameBoard[r][c].getThisRect())) {
+                    if (!prev.equals(gameBoard[r][c].getThisRect())) {
+                        endX = gameBoard[r][c].getBoxX() + 40;
+                        endY = gameBoard[r][c].getBoxX() + 38;
                     }
+                    currentWord.add(letterBoard[r][c]);
+                    if (!gameBoard[r][c].isSelected()) {
+                        gameBoard[r][c].switchToSelected();
+                    }
+                    prev = gameBoard[r][c].getThisRect();
                 }
             }
         }
     }
 
+
     @Override
     public void mouseMoved(MouseEvent e) {
 
+
     }
 }
+
+
+
+
