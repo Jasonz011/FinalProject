@@ -9,8 +9,6 @@ import java.util.ArrayList;
 import java.util.Scanner;
 
 
-
-
 public class GamePanel extends JPanel implements KeyListener, MouseListener, ActionListener, MouseMotionListener {
     private BufferedImage background;
     private BufferedImage woodRect;
@@ -281,8 +279,6 @@ public class GamePanel extends JPanel implements KeyListener, MouseListener, Act
     @Override
     public void mouseMoved(MouseEvent e) {}
 }
-
-
 
 
 

@@ -1,8 +1,11 @@
 import javax.swing.*;
 
+
 public class GameFrame implements Runnable {
 
+
     private GamePanel panel;
+
 
     public GameFrame(String name) {
         JFrame frame = new JFrame("Word Hunt");
@@ -11,17 +14,21 @@ public class GameFrame implements Runnable {
         // 4x4 grid, 100x4 + 20x5 = 500, and an extra 60 units of height for the timer
         frame.setLocationRelativeTo(null); // auto-centers frame in screen
 
+
         // create and add panel
         panel = new GamePanel(name, frame);
         frame.add(panel);
 
+
         // display the frame
         frame.setVisible(true);
+
 
         // start thread, required for animation
         Thread thread = new Thread(this);
         thread.start();
     }
+
 
     public void run() {
         while (true) {
@@ -29,3 +36,4 @@ public class GameFrame implements Runnable {
         }
     }
 }
+
