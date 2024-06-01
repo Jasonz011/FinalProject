@@ -7,12 +7,12 @@ public class GameFrame implements Runnable {
     public GameFrame(String name) {
         JFrame frame = new JFrame("Word Hunt");
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        frame.setSize(521, 530); // 100X100 per letter box and 20X20 in the margins
+        frame.setSize(521, 630); // 100X100 per letter box and 20X20 in the margins
         // 4x4 grid, 100x4 + 20x5 = 500, and an extra 60 units of height for the timer
         frame.setLocationRelativeTo(null); // auto-centers frame in screen
 
         // create and add panel
-        panel = new GamePanel(name);
+        panel = new GamePanel(name, frame);
         frame.add(panel);
 
         // display the frame

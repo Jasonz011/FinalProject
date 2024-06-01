@@ -11,13 +11,15 @@ import java.util.Scanner;
 public class EndPanel extends JPanel {
     private BufferedImage background;
     private int points;
-    public EndPanel(JFrame frame, int points) {
+    private String playerName;
+    public EndPanel(String name, JFrame frame, int points) {
         try {
             background = ImageIO.read(new File("")); //fill in
         } catch (IOException e) {
             System.out.println(e.getMessage());
         }
         this.points = points;
+        playerName = name;
     }
 
     @Override
@@ -26,5 +28,6 @@ public class EndPanel extends JPanel {
         g.drawImage(background, 0, 0, null);
         g.setFont(new Font("Courier New", Font.BOLD, 24));
         g.drawString("Points Earned: " + points, 200, 75);
+        g.drawString(playerName, 150, 25);
     }
 }
