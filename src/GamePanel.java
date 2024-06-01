@@ -29,13 +29,16 @@ public class GamePanel extends JPanel implements KeyListener, MouseListener, Act
     private int endY;
     private Rectangle prev;
     private String pName;
+    private ArrayList<Point> linePoints;
+    private String color;
 
 
 
     public GamePanel(String name, JFrame frame) {
+        color = "BLACK";
         readData();
         fillBoard();
-        prev = new Rectangle();
+        linePoints = new ArrayList<>();
         gameBoard = new WordBox[4][4];
         try {
             background = ImageIO.read(new File("src\\wordHuntBack.jpg"));
@@ -67,7 +70,7 @@ public class GamePanel extends JPanel implements KeyListener, MouseListener, Act
         currentWord = "";
 
 
-        time = 5; // for testing
+        time = 60; // for testing
 
         points = 0;
         timer = new Timer(1000, this); // this Timer will call the actionPerformed interface method every 1000ms = 1 second
@@ -77,8 +80,6 @@ public class GamePanel extends JPanel implements KeyListener, MouseListener, Act
         addMouseMotionListener(this);
         setFocusable(true); // this line of code + one below makes this panel active for keylistener events
         requestFocusInWindow(); // see comment above
-        endX = 54 + 40;
-        endY = 40 + 38;
     }
 
     public void readData() {
@@ -143,9 +144,23 @@ public class GamePanel extends JPanel implements KeyListener, MouseListener, Act
         } else {
             g.drawString("Time's Up!", 280, 40);
         }
-        Graphics2D g2 = (Graphics2D) g;
-        g2.setStroke(new BasicStroke(10));
-        g2.drawLine(currentMouseLoc.x, currentMouseLoc.y, endX, endY);
+        if (!linePoints.isEmpty()) {
+            Graphics2D g2 = (Graphics2D) g;
+            g2.setStroke(new BasicStroke(15));
+            if (color.equals("BlACK")) {
+                g2.setColor(Color.BLACK);
+            } else if (color.equals("GREEN")) {
+                g2.setColor(Color.GREEN);
+            }
+            for (int i = 0; i < linePoints.size() - 1; i++) {
+                if (linePoints.size() > 1) {
+                    g2.drawLine(linePoints.get(i).x, linePoints.get(i).y, linePoints.get(i + 1).x, linePoints.get(i + 1).y);
+                } else {
+                    g2.drawLine(linePoints.get(i).x, linePoints.get(i).y, linePoints.get(i).x, linePoints.get(i).y);
+                }
+            }
+        }
+
     }
 
 
@@ -184,8 +199,9 @@ public class GamePanel extends JPanel implements KeyListener, MouseListener, Act
         for (int r = 0; r < gameBoard.length; r++) {
             for (int c = 0; c < gameBoard[0].length; c++) {
                 if (mouseClickLocation.intersects(gameBoard[r][c].getThisRect())) {
-                    prev = gameBoard[r][c].getThisRect();
-                    currentMouseLoc.setLocation(gameBoard[r][c].getBoxX() + 40, gameBoard[r][c].getBoxY() + 38);
+                    Point newPoint = new Point(gameBoard[r][c].getBoxX() + 40, gameBoard[r][c].getBoxY() + 38);
+                    linePoints.add(newPoint);
+                    color = "BLACK";
                 }
             }
         }
@@ -195,6 +211,7 @@ public class GamePanel extends JPanel implements KeyListener, MouseListener, Act
 
 
     public void mouseReleased(MouseEvent e) { // released
+
         if (words.contains(currentWord)) {
             int length = currentWord.length();
             if (!usedWords.contains(currentWord)) {
@@ -220,6 +237,7 @@ public class GamePanel extends JPanel implements KeyListener, MouseListener, Act
                 gameBoard[r][c].switchToNormal();
             }
         }
+        linePoints.clear();
     }
 
 
@@ -259,25 +277,33 @@ public class GamePanel extends JPanel implements KeyListener, MouseListener, Act
                 for (int c = 0; c < gameBoard[0].length; c++) {
                     if (mouseClickLocation.intersects(gameBoard[r][c].getThisRect())) {
                         if (!gameBoard[r][c].isSelected()) {
-                            endX = gameBoard[r][c].getBoxX() + 40;
-                            endY = gameBoard[r][c].getBoxX() + 38;
+                            Point newPoint = new Point(gameBoard[r][c].getBoxX() + 40, gameBoard[r][c].getBoxY() + 38);
+                            linePoints.add(newPoint);
                             currentWord += gameBoard[r][c].getLetter();
                             System.out.println("added to word");
                             gameBoard[r][c].switchToSelected();
-                            prev = gameBoard[r][c].getThisRect();
                         }
                     }
-                    currentMouseLoc.setLocation(endX, endY);
                 }
             }
+            if (words.contains(currentWord)) {
+                int length = currentWord.length();
+                if (!usedWords.contains(currentWord)) {
+                    if (length >= 3) {
+                        color = "GREEN";
+                    }
+                }
+            } else {
+                color = "BlACK";
+            }
+
         }
     }
 
-
-
-
     @Override
-    public void mouseMoved(MouseEvent e) {}
+    public void mouseMoved (MouseEvent e){
+    }
+
 }
 
 
