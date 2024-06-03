@@ -11,8 +11,7 @@ import java.util.Scanner;
 
 public class GamePanel extends JPanel implements KeyListener, MouseListener, ActionListener, MouseMotionListener {
     private BufferedImage background;
-    private BufferedImage woodRect;
-    private BufferedImage woodRectSelected;
+    private BufferedImage topBackground;
     private String[][] letterBoard;
     private WordBox[][] gameBoard;
     private ArrayList<String> words;
@@ -22,12 +21,7 @@ public class GamePanel extends JPanel implements KeyListener, MouseListener, Act
     private int points;
     private JButton continueButton;
     private JFrame enclosingFrame;
-    private Point currentMouseLoc;
-    private Point mouseDragLoc;
     private ArrayList<String> usedWords;
-    private int endX;
-    private int endY;
-    private Rectangle prev;
     private String pName;
     private ArrayList<Point> linePoints;
     private String color;
@@ -42,7 +36,7 @@ public class GamePanel extends JPanel implements KeyListener, MouseListener, Act
         gameBoard = new WordBox[4][4];
         try {
             background = ImageIO.read(new File("src\\wordHuntBack.jpg"));
-            woodRect = ImageIO.read(new File("src\\woodRect.png"));
+            topBackground = ImageIO.read(new File("src\\topBackground1.jpg"));
         } catch (IOException e) {
             System.out.println(e.getMessage());
         }
@@ -61,8 +55,6 @@ public class GamePanel extends JPanel implements KeyListener, MouseListener, Act
         }
         pName = name;
         usedWords = new ArrayList<>();
-        currentMouseLoc = new Point();
-        mouseDragLoc = new Point();
         enclosingFrame = frame;
         continueButton = new JButton("continue");
         add(continueButton);
@@ -70,7 +62,7 @@ public class GamePanel extends JPanel implements KeyListener, MouseListener, Act
         currentWord = "";
 
 
-        time = 60; // for testing
+        time = 3; // for testing
 
         points = 0;
         timer = new Timer(1000, this); // this Timer will call the actionPerformed interface method every 1000ms = 1 second
@@ -112,10 +104,11 @@ public class GamePanel extends JPanel implements KeyListener, MouseListener, Act
     public void paintComponent(Graphics g) {
         super.paintComponent(g);  // just do this
         if (time <= 0) {
-            continueButton.setLocation(320, 80);
+            continueButton.setLocation(370, 60);
         } else {
             continueButton.setLocation(700, 700);
         }
+        g.drawImage(topBackground, 0, -89, null);
         g.drawImage(background, 0, 100, null);
         g.setFont(new Font("Comic Sans", Font.BOLD, 60));
         for (int i = 0; i < gameBoard.length; i++) {
@@ -137,12 +130,12 @@ public class GamePanel extends JPanel implements KeyListener, MouseListener, Act
             int minutes = time / 60;
             int seconds = time - time/60 * 60;
             if (seconds < 10) {
-                g.drawString("" + 0 + minutes + ":" + 0 + seconds, 400, 70);
+                g.drawString("" + 0 + minutes + ":" + 0 + seconds, 370, 70);
             } else {
-                g.drawString("" + 0 + minutes + ":" + seconds, 400, 70);
+                g.drawString("" + 0 + minutes + ":" + seconds, 370, 70);
             }
         } else {
-            g.drawString("Time's Up!", 280, 40);
+            g.drawString("Time's Up!", 190, 80);
         }
         if (!linePoints.isEmpty()) {
             Graphics2D g2 = (Graphics2D) g;
@@ -151,6 +144,8 @@ public class GamePanel extends JPanel implements KeyListener, MouseListener, Act
                 g2.setColor(Color.BLACK);
             } else if (color.equals("GREEN")) {
                 g2.setColor(Color.GREEN);
+            } else if (color.equals("YELLOW")) {
+                g2.setColor(Color.YELLOW);
             }
             for (int i = 0; i < linePoints.size() - 1; i++) {
                 if (linePoints.size() > 1) {
@@ -211,30 +206,25 @@ public class GamePanel extends JPanel implements KeyListener, MouseListener, Act
 
 
     public void mouseReleased(MouseEvent e) { // released
-
         if (words.contains(currentWord)) {
             int length = currentWord.length();
             if (!usedWords.contains(currentWord)) {
                 if (length == 3) {
                     points += 100;
-                    System.out.println("blah");
                 } else if (length == 4) {
                     points += 400;
-                    System.out.println("blah");
                 } else if (length == 5) {
                     points += 800;
-                    System.out.println("blah");
                 } else if (length >= 6) {
                     points += 1000 + (length - 5) * 400;
-                    System.out.println("blah");
                 }
                 usedWords.add(currentWord);
             }
         }
         currentWord = "";
-        for (int r = 0; r < gameBoard.length; r++) {
+        for (WordBox[] wordBoxes : gameBoard) {
             for (int c = 0; c < gameBoard[0].length; c++) {
-                gameBoard[r][c].switchToNormal();
+                wordBoxes[c].switchToNormal();
             }
         }
         linePoints.clear();
@@ -280,7 +270,6 @@ public class GamePanel extends JPanel implements KeyListener, MouseListener, Act
                             Point newPoint = new Point(gameBoard[r][c].getBoxX() + 40, gameBoard[r][c].getBoxY() + 38);
                             linePoints.add(newPoint);
                             currentWord += gameBoard[r][c].getLetter();
-                            System.out.println("added to word");
                             gameBoard[r][c].switchToSelected();
                         }
                     }
@@ -292,6 +281,8 @@ public class GamePanel extends JPanel implements KeyListener, MouseListener, Act
                     if (length >= 3) {
                         color = "GREEN";
                     }
+                } else {
+                    color =  "YELLOW";
                 }
             } else {
                 color = "BlACK";

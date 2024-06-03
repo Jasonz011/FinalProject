@@ -7,11 +7,12 @@ import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Scanner;
+import javax.swing.JLabel;
 
 public class EndPanel extends JPanel {
     private BufferedImage background;
     private int points;
-    private String playerName;
+    private JLabel playerName;
     public EndPanel(String name, JFrame frame, int points) {
         try {
             background = ImageIO.read(new File("")); //fill in
@@ -19,7 +20,9 @@ public class EndPanel extends JPanel {
             System.out.println(e.getMessage());
         }
         this.points = points;
-        playerName = name;
+        playerName = new JLabel(name, SwingConstants.CENTER);
+        playerName.setPreferredSize(new Dimension(200, 80));
+        add(playerName);
     }
 
     @Override
@@ -28,6 +31,13 @@ public class EndPanel extends JPanel {
         g.drawImage(background, 0, 0, null);
         g.setFont(new Font("Courier New", Font.BOLD, 24));
         g.drawString("Points Earned: " + points, 200, 75);
-        g.drawString(playerName, 150, 25);
     }
 }
+
+
+/* sources
+https://stackoverflow.com/questions/19506769/how-to-center-jlabel-in-jframe-swing for centering label
+
+https://docs.oracle.com/javase%2F8%2Fdocs%2Fapi%2F%2F/java/awt/Dimension.html for the dimension class
+https://docs.oracle.com/javase%2F8%2Fdocs%2Fapi%2F%2F/javax/swing/JLabel.html for setting the size of the label
+ */
