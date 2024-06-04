@@ -25,6 +25,8 @@ public class GamePanel extends JPanel implements KeyListener, MouseListener, Act
     private String pName;
     private ArrayList<Point> linePoints;
     private String color;
+    private int prevCol;
+    private int prevRow;
 
 
 
@@ -62,7 +64,7 @@ public class GamePanel extends JPanel implements KeyListener, MouseListener, Act
         currentWord = "";
 
 
-        time = 3; // for testing
+        time = 60; // for testing
 
         points = 0;
         timer = new Timer(1000, this); // this Timer will call the actionPerformed interface method every 1000ms = 1 second
@@ -104,12 +106,12 @@ public class GamePanel extends JPanel implements KeyListener, MouseListener, Act
     public void paintComponent(Graphics g) {
         super.paintComponent(g);  // just do this
         if (time <= 0) {
-            continueButton.setLocation(370, 60);
+            continueButton.setLocation(405, 60);
         } else {
             continueButton.setLocation(700, 700);
         }
-        g.drawImage(topBackground, 0, -89, null);
         g.drawImage(background, 0, 100, null);
+        g.drawImage(topBackground, 0, -107, null);
         g.setFont(new Font("Comic Sans", Font.BOLD, 60));
         for (int i = 0; i < gameBoard.length; i++) {
             for (int j = 0; j < gameBoard[0].length; j++) {
@@ -125,17 +127,17 @@ public class GamePanel extends JPanel implements KeyListener, MouseListener, Act
         }
 
 
-        g.setFont(new Font("Courier New", Font.BOLD, 24));
+        g.setFont(new Font("Courier New", Font.BOLD, 17));
         if (time > 0) { // need to fix so that if (time - time/60 * 60) is less than 10, you add a 0 because its single digit
             int minutes = time / 60;
             int seconds = time - time/60 * 60;
             if (seconds < 10) {
-                g.drawString("" + 0 + minutes + ":" + 0 + seconds, 370, 70);
+                g.drawString("" + 0 + minutes + ":" + 0 + seconds, 340, 40);
             } else {
-                g.drawString("" + 0 + minutes + ":" + seconds, 370, 70);
+                g.drawString("" + 0 + minutes + ":" + seconds, 340, 40);
             }
         } else {
-            g.drawString("Time's Up!", 190, 80);
+            g.drawString("Time's Up!", 295, 40);
         }
         if (!linePoints.isEmpty()) {
             Graphics2D g2 = (Graphics2D) g;
@@ -155,6 +157,11 @@ public class GamePanel extends JPanel implements KeyListener, MouseListener, Act
                 }
             }
         }
+        g.setFont(new Font("Courier New", Font.BOLD, 30));
+        g.drawString(points + "", 304, 71);
+        g.setFont(new Font("Courier New", Font.BOLD, 18));
+        g.drawString(usedWords.size() + "", 265, 46);
+
 
     }
 
@@ -197,6 +204,8 @@ public class GamePanel extends JPanel implements KeyListener, MouseListener, Act
                     Point newPoint = new Point(gameBoard[r][c].getBoxX() + 40, gameBoard[r][c].getBoxY() + 38);
                     linePoints.add(newPoint);
                     color = "BLACK";
+                    prevCol = c;
+                    prevRow = r;
                 }
             }
         }
@@ -211,14 +220,17 @@ public class GamePanel extends JPanel implements KeyListener, MouseListener, Act
             if (!usedWords.contains(currentWord)) {
                 if (length == 3) {
                     points += 100;
+                    usedWords.add(currentWord);
                 } else if (length == 4) {
                     points += 400;
+                    usedWords.add(currentWord);
                 } else if (length == 5) {
                     points += 800;
+                    usedWords.add(currentWord);
                 } else if (length >= 6) {
                     points += 1000 + (length - 5) * 400;
+                    usedWords.add(currentWord);
                 }
-                usedWords.add(currentWord);
             }
         }
         currentWord = "";
@@ -267,10 +279,14 @@ public class GamePanel extends JPanel implements KeyListener, MouseListener, Act
                 for (int c = 0; c < gameBoard[0].length; c++) {
                     if (mouseClickLocation.intersects(gameBoard[r][c].getThisRect())) {
                         if (!gameBoard[r][c].isSelected()) {
-                            Point newPoint = new Point(gameBoard[r][c].getBoxX() + 40, gameBoard[r][c].getBoxY() + 38);
-                            linePoints.add(newPoint);
-                            currentWord += gameBoard[r][c].getLetter();
-                            gameBoard[r][c].switchToSelected();
+                            if ((prevCol == c && (prevRow + 1 == r || prevRow - 1 == r)) || (prevRow == r && (prevCol + 1 == c || prevCol - 1 == c)) || (prevCol == c && prevRow == r) || (prevCol - 1 == c && prevRow - 1 == r) || (prevCol + 1 == c && prevRow + 1 == r) || (prevCol - 1 == c && prevRow + 1 == r) || (prevCol + 1 == c && prevRow - 1 == r)) {
+                                Point newPoint = new Point(gameBoard[r][c].getBoxX() + 40, gameBoard[r][c].getBoxY() + 38);
+                                linePoints.add(newPoint);
+                                currentWord += gameBoard[r][c].getLetter();
+                                gameBoard[r][c].switchToSelected();
+                                prevCol = c;
+                                prevRow = r;
+                            }
                         }
                     }
                 }
