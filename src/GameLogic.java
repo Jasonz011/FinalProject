@@ -1,6 +1,5 @@
 public class GameLogic {
     private String[][] letters;
-//    private boolean validArray;
 
     public GameLogic() {
         letters = new String[4][4];
@@ -14,7 +13,6 @@ public class GameLogic {
             for (int c = 0; c<letters[0].length; c++) {
                 // decides whether to put a vowel or consonant at that position of the 2D array
                 int rand = (int) (Math.random() * 100 + 1);
-                // for some reason this doesn't work as intended, instead the whole array is filled with null elements
                 if (rand <= 32) {
                     letters[r][c] = vowels[(int) (Math.random() * 5)].toUpperCase();
                 } else if (rand <= 36) {
@@ -25,15 +23,6 @@ public class GameLogic {
             }
         }
     }
-
-//    //method to check if the wordArray has enough eligible words, up to later decision
-//    public void checkArray() {
-//        while (!validArray) {
-//            fillArray();
-//            // if
-//        }
-//        //else
-//    }
 
     public String[][] getLetters() {
         return letters;

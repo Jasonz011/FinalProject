@@ -64,7 +64,7 @@ public class GamePanel extends JPanel implements KeyListener, MouseListener, Act
         currentWord = "";
 
 
-        time = 60; // for testing
+        time = 5; // for testing
 
         points = 0;
         timer = new Timer(1000, this); // this Timer will call the actionPerformed interface method every 1000ms = 1 second
@@ -262,7 +262,7 @@ public class GamePanel extends JPanel implements KeyListener, MouseListener, Act
         } else if (e.getSource() instanceof JButton) {
             JButton button = (JButton) e.getSource();
             if (button == continueButton) {
-                EndFrame end = new EndFrame("Scoreboard", points, pName);
+                EndFrame end = new EndFrame("Scoreboard", points, pName, usedWords.size());
                 enclosingFrame.setVisible(false);
             }
         }

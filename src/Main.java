@@ -1,3 +1,4 @@
+import java.util.ArrayList;
 import java.util.Scanner;
 public class Main {
     public static void main(String[] args) {
@@ -10,7 +11,7 @@ public class Main {
         } else if (option.equals("2")) {
             GameFrame gameFrame = new GameFrame("Eric");
         } else {
-            EndFrame endFrame = new EndFrame("End Screen,", 100, "Eric");
+            EndFrame endFrame = new EndFrame("End Screen,", 100, "Eric", 10);
         }
 
         /* after finished all tests
