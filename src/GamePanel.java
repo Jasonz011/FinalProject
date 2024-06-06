@@ -64,7 +64,7 @@ public class GamePanel extends JPanel implements KeyListener, MouseListener, Act
         currentWord = "";
 
 
-        time = 5; // for testing
+        time = 10; // for testing
 
         points = 0;
         timer = new Timer(1000, this); // this Timer will call the actionPerformed interface method every 1000ms = 1 second

@@ -17,11 +17,11 @@ public class StartPanel extends JPanel implements ActionListener {
 
     public StartPanel(JFrame frame) {
         enclosingFrame = frame;
-        try {
-            image = ImageIO.read(new File(""));
-        } catch (IOException e) {
-            System.out.println(e.getMessage());
-        }
+//        try {
+//            image = ImageIO.read(new File(""));
+//        } catch (IOException e) {
+//            System.out.println(e.getMessage());
+//        }
         textField = new JTextField(10);
         submitButton = new JButton("Submit");
         clearButton = new JButton("Clear");
