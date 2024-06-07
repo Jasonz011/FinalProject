@@ -13,15 +13,15 @@ public class StartPanel extends JPanel implements ActionListener {
     private JButton submitButton;
     private JButton clearButton;
     private JFrame enclosingFrame;
-    private BufferedImage image;
+    private BufferedImage background;
 
     public StartPanel(JFrame frame) {
         enclosingFrame = frame;
-//        try {
-//            image = ImageIO.read(new File(""));
-//        } catch (IOException e) {
-//            System.out.println(e.getMessage());
-//        }
+        try {
+            background = ImageIO.read(new File("src\\startBack.jpg"));
+        } catch (IOException e) {
+            System.out.println(e.getMessage());
+        }
         textField = new JTextField(10);
         submitButton = new JButton("Submit");
         clearButton = new JButton("Clear");
@@ -35,10 +35,10 @@ public class StartPanel extends JPanel implements ActionListener {
     @Override
     public void paintComponent(Graphics g) {
         super.paintComponent(g);
+        g.drawImage(background, 0, -100, null);
         g.setFont(new Font("Arial", Font.BOLD, 16));
         g.setColor(Color.RED);
         g.drawString("Please enter your name:", 50, 30);
-        g.drawImage(image, 200, 50, null);
         textField.setLocation(50, 50);
         submitButton.setLocation(50, 100);
         clearButton.setLocation(150, 100);

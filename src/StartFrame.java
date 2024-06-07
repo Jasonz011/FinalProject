@@ -6,7 +6,7 @@ public class StartFrame {
     public StartFrame() {
         JFrame frame = new JFrame("Welcome");
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        frame.setSize(300, 200);
+        frame.setSize(521, 630);
         frame.setLocationRelativeTo(null); // auto-centers frame in screen
 
         // create and add panel
