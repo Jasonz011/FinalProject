@@ -11,7 +11,6 @@ public class StartPanel extends JPanel implements ActionListener {
 
     private JTextField textField;
     private JButton submitButton;
-    private JButton clearButton;
     private JFrame enclosingFrame;
     private BufferedImage background;
 
@@ -24,12 +23,9 @@ public class StartPanel extends JPanel implements ActionListener {
         }
         textField = new JTextField(10);
         submitButton = new JButton("Submit");
-        clearButton = new JButton("Clear");
         add(textField);  // textField doesn't need a listener since nothing needs to happen when we type in text
         add(submitButton);
-        add(clearButton);
         submitButton.addActionListener(this);
-        clearButton.addActionListener(this);
     }
 
     @Override
@@ -38,10 +34,8 @@ public class StartPanel extends JPanel implements ActionListener {
         g.drawImage(background, 0, -100, null);
         g.setFont(new Font("Arial", Font.BOLD, 16));
         g.setColor(Color.RED);
-        g.drawString("Please enter your name:", 50, 30);
-        textField.setLocation(50, 50);
-        submitButton.setLocation(50, 100);
-        clearButton.setLocation(150, 100);
+        textField.setLocation(170, 457);
+        submitButton.setLocation(310, 457);
     }
 
     // ACTIONLISTENER INTERFACE METHODS

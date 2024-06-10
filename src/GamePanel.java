@@ -64,7 +64,7 @@ public class GamePanel extends JPanel implements KeyListener, MouseListener, Act
         currentWord = "";
 
 
-        time = 10; // for testing
+        time = 90; // for testing
 
         points = 0;
         timer = new Timer(1000, this); // this Timer will call the actionPerformed interface method every 1000ms = 1 second
@@ -79,7 +79,7 @@ public class GamePanel extends JPanel implements KeyListener, MouseListener, Act
     public void readData() {
         words = new ArrayList<>();
         try {
-            File myFile = new File("src\\words.txt");
+            File myFile = new File("src\\wordlist.txt");
             Scanner fileScanner = new Scanner(myFile);
             while (fileScanner.hasNext()) {
                 String word = fileScanner.nextLine();
